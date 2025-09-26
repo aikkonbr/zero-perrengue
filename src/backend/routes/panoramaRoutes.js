@@ -3,13 +3,26 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 
-// Paths to data files
-const accountsPath = path.join(__dirname, '..', 'data', 'accounts.json');
-const transactionsPath = path.join(__dirname, '..', 'data', 'transactions.json');
-const recurringRulesPath = path.join(__dirname, '..', 'data', 'recurringTransactions.json');
+const dataDir = path.join(__dirname, '..', 'data');
 
-// Helper to read data files
+// Middleware para garantir que o usuário está autenticado
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Não autorizado' });
+};
+
+// Aplica o middleware a todas as rotas deste arquivo
+router.use(isAuthenticated);
+
+// Funções de dados agora usam o ID do usuário
+const getUserAccountsPath = (userId) => path.join(dataDir, `${userId}_accounts.json`);
+const getUserTransactionsPath = (userId) => path.join(dataDir, `${userId}_transactions.json`);
+const getUserRecurringRulesPath = (userId) => path.join(dataDir, `${userId}_recurringTransactions.json`);
+
 const readData = (filePath) => {
+  if (!fs.existsSync(filePath)) return [];
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     return data ? JSON.parse(data) : [];
@@ -18,13 +31,14 @@ const readData = (filePath) => {
   }
 };
 
-// Main route for panorama data - REBUILT FOR CARDS
+// Rota do panorama (agora específica do usuário)
 router.get('/', (req, res) => {
-  const accounts = readData(accountsPath);
-  const physicalTransactions = readData(transactionsPath).map(t => ({ ...t, date: new Date(t.date) }));
-  const recurringRules = readData(recurringRulesPath).map(r => ({ ...r, startDate: new Date(r.startDate) }));
+  const userId = req.user.id;
+  const accounts = readData(getUserAccountsPath(userId));
+  const physicalTransactions = readData(getUserTransactionsPath(userId)).map(t => ({ ...t, date: new Date(t.date) }));
+  const recurringRules = readData(getUserRecurringRulesPath(userId)).map(r => ({ ...r, startDate: new Date(r.startDate) }));
 
-  // --- 1. Calculate Opening Balance for the Panorama Start Date ---
+  // --- 1. Calculate Opening Balance ---
   const panoramaStartDate = new Date();
   panoramaStartDate.setDate(1);
   panoramaStartDate.setHours(0, 0, 0, 0);
@@ -80,7 +94,7 @@ router.get('/', (req, res) => {
       }
   }
 
-  // --- 2. Process 12 Months for Panorama, grouped by month ---
+  // --- 2. Process 12 Months for Panorama ---
   let panoramaData = [];
   let lastCumulativeBalance = openingBalance;
 
@@ -101,7 +115,6 @@ router.get('/', (req, res) => {
         accountDetails: []
     };
 
-    // Aggregate transactions for each account
     accounts.forEach(account => {
       let accountMonthlyTotal = 0;
 
