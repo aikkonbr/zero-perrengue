@@ -1,11 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const apiUrl = 'https://zero-perrengue.onrender.com/api';
+  const apiUrl = 'http://localhost:3000/api';
 
-    // --- UI Elements ---
+  // --- Views ---
+  const loginView = document.getElementById('login-view');
+  const appView = document.getElementById('app-view');
+
+  // --- UI Elements ---
   const summaryBar = document.getElementById('summary-bar');
   const monthlyView = document.getElementById('monthly-view');
   const panoramaView = document.getElementById('panorama-view');
   const accountsListDiv = document.getElementById('accounts-list');
+  const userProfileDiv = document.getElementById('user-profile');
+  const userNameSpan = document.getElementById('user-name');
+
+  // --- Buttons ---
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
 
   // --- Modals & Forms ---
   const accountModal = document.getElementById('account-modal');
@@ -34,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const getAccountTypeIcon = (type) => {
     const option = accountTypeOptions.find(opt => opt.value === type);
-    return option ? option.icon : '📁'; // Default icon
+    return option ? option.icon : '📁';
   };
 
   const getTodayDateString = () => new Date().toISOString().split('T')[0];
@@ -210,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!response.ok) throw new Error('Falha ao carregar dados do panorama.');
         const monthlyData = await response.json();
 
-        panoramaGrid.innerHTML = ''; // Limpa o conteúdo anterior
+        panoramaGrid.innerHTML = '';
 
         monthlyData.forEach(data => {
             const card = document.createElement('div');
@@ -230,35 +240,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 '<li>Nenhuma movimentação registrada.</li>';
 
             card.innerHTML = `
-                <div class="panorama-card-header">
-                    <h3>${data.month}</h3>
-                </div>
+                <div class="panorama-card-header"><h3>${data.month}</h3></div>
                 <div class="panorama-card-body">
-                    <div class="month-balance">
-                        <span class="balance-label">Balanço do Mês</span>
-                        <span class="balance-value ${saldoMesClass}">${data.saldoMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} ${balanceIcon}</span>
-                    </div>
+                    <div class="month-balance"><span class="balance-label">Balanço do Mês</span><span class="balance-value ${saldoMesClass}">${data.saldoMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} ${balanceIcon}</span></div>
                     <div class="month-summary">
-                        <div class="summary-detail income">
-                            <span class="label">(+) Proventos</span>
-                            <span>${data.totalProventos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                        </div>
-                        <div class="summary-detail expense">
-                            <span class="label">(-) Despesas</span>
-                            <span>${data.totalDespesas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                        </div>
+                        <div class="summary-detail income"><span class="label">(+) Proventos</span><span>${data.totalProventos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></div>
+                        <div class="summary-detail expense"><span class="label">(-) Despesas</span><span>${data.totalDespesas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></div>
                     </div>
-                    <div class="account-details-container hidden">
-                        <h4>Detalhes por Conta</h4>
-                        <ul class="account-details-list">${detailsHTML}</ul>
-                    </div>
+                    <div class="account-details-container hidden"><h4>Detalhes por Conta</h4><ul class="account-details-list">${detailsHTML}</ul></div>
                 </div>
                 <div class="panorama-card-footer">
                     <button class="details-toggle-btn">Ver Detalhes</button>
-                    <div class="cumulative-balance">
-                        <span class="label">Saldo Acumulado</span>
-                        <span class="value ${saldoAcumuladoClass}">${data.saldoAcumulado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                    </div>
+                    <div class="cumulative-balance"><span class="label">Saldo Acumulado</span><span class="value ${saldoAcumuladoClass}">${data.saldoAcumulado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></div>
                 </div>
             `;
             panoramaGrid.appendChild(card);
@@ -312,6 +305,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModal = (modal) => modal.classList.add('hidden');
 
   // --- Event Listeners ---
+  loginBtn.addEventListener('click', () => {
+    window.location.href = `${apiUrl}/auth/google`;
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    window.location.href = `${apiUrl}/auth/logout`;
+  });
+
   document.getElementById('fab-main-btn').addEventListener('click', () => document.querySelector('.fab-actions').classList.toggle('hidden'));
   document.getElementById('open-account-modal-btn').addEventListener('click', () => {
     accountForm.reset();
@@ -360,14 +361,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('recurring-rules-list').addEventListener('click', async (event) => {
     if (event.target.classList.contains('delete-rule-btn')) {
       const ruleId = event.target.dataset.id;
-      if (confirm('Tem certeza que deseja apagar esta regra de recorrência? Esta ação não pode ser desfeita.')) {
+      if (confirm('Tem certeza que deseja apagar esta regra de recorrência?')) {
         try {
           await fetch(`${apiUrl}/recurring-transactions/${ruleId}`, { method: 'DELETE' });
-          await renderRecurringRules(); // Re-render the list in the modal
-          await renderMonthlyView(); // Re-render the main view to reflect the change
+          await renderRecurringRules();
+          await renderMonthlyView();
         } catch (error) {
           alert('Erro ao deletar a regra.');
-          console.error(error);
         }
       }
     }
@@ -584,5 +584,27 @@ document.addEventListener('DOMContentLoaded', () => {
     await renderMonthlyView();
   };
 
-  initializeApp();
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/auth/status`);
+      const data = await response.json();
+      if (data.loggedIn) {
+        loginView.classList.add('hidden');
+        appView.classList.remove('hidden');
+        document.body.classList.add('app-loaded');
+        userNameSpan.textContent = data.user.displayName || 'Usuário'; 
+        userProfileDiv.classList.remove('hidden');
+        initializeApp();
+      } else {
+        loginView.classList.remove('hidden');
+        appView.classList.add('hidden');
+      }
+    } catch (error) {
+      loginView.classList.remove('hidden');
+      appView.classList.add('hidden');
+      console.error('Erro ao verificar status de autenticação', error);
+    }
+  };
+
+  checkAuthStatus();
 });

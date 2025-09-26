@@ -8,168 +8,186 @@
 </head>
 <body>
 
-  <div id="summary-bar"></div>
-
-  <header>
+  <!-- Tela de Login (visível por padrão) -->
+  <div id="login-view" class="login-container">
     <h1>Zero Perrengue 🎯</h1>
-  </header>
-
-  <main class="container">
-    <div class="main-content">
-      
-      <div class="view-switcher-container">
-        <button class="view-switch-btn active" data-view="monthly">Visão Mensal</button>
-        <button class="view-switch-btn" data-view="panorama">Visão Panorama</button>
-      </div>
-
-      <div id="monthly-view">
-        <div id="date-navigation-container">
-          <div id="year-selector-cards"></div>
-          <div id="month-tabs-container"></div>
-        </div>
-        <div id="accounts-list"></div>
-      </div>
-
-      <!-- O container da nova visão panorama -->
-      <div id="panorama-view" class="hidden">
-        <div id="panorama-card-grid"></div>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- Botão de Ação Flutuante (FAB) -->
-  <div class="fab-container">
-    <div class="fab-actions hidden">
-       <div class="fab-action">
-        <span class="fab-label">Gerenciar Recorrências</span>
-        <button class="fab-action-btn" id="open-manage-recurring-modal-btn">⚙️</button>
-      </div>
-      <div class="fab-action">
-        <span class="fab-label">Adicionar Conta</span>
-        <button class="fab-action-btn" id="open-account-modal-btn">&#x1F4B3;</button>
-      </div>
-      <div class="fab-action">
-        <span class="fab-label">Adicionar Transação</span>
-        <button class="fab-action-btn" id="open-add-transaction-modal-btn">&#x1F4B5;</button>
-      </div>
-    </div>
-    <button class="fab-main-btn" id="fab-main-btn">+</button>
+    <p>Suas finanças no alvo, sem aperto.</p>
+    <button id="login-btn" class="login-btn">Entrar com Google</button>
+    <p class="login-note">Você será redirecionado para a página de login segura do Google.</p>
   </div>
 
-  <!-- MODAIS -->
+  <!-- Aplicação Principal (escondida por padrão) -->
+  <div id="app-view" class="hidden">
+    
+    <div id="summary-bar"></div>
 
-  <!-- Modal Gerenciar Recorrências -->
-  <div id="manage-recurring-modal" class="modal-overlay hidden modal-lg">
-    <div class="modal-content">
-      <h2>Gerenciar Recorrências</h2>
-      <p>Aqui você pode ver e apagar suas regras de transações recorrentes.</p>
-      <ul id="recurring-rules-list" class="item-list"></ul>
-      <div class="modal-actions">
-        <button type="button" class="cancel-btn">Fechar</button>
+    <header>
+      <div class="header-content">
+        <h1>Zero Perrengue 🎯</h1>
+        <div id="user-profile" class="hidden">
+          <span id="user-name"></span>
+          <a id="logout-btn">Sair</a>
+        </div>
       </div>
-    </div>
-  </div>
+    </header>
 
-  <!-- Modal Unificado para Adicionar/Editar Conta -->
-  <div id="account-modal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <h2 id="account-modal-title">Adicionar Conta</h2>
-      <form id="account-form">
-        <input type="hidden" id="account-id">
-        <label for="account-name">Nome da Conta</label>
-        <input type="text" id="account-name" placeholder="Ex: ITAU BLACK" required>
-        <label>Tipo</label>
-        <div id="account-type-selector" class="card-selector-container"></div>
-        <input type="hidden" id="account-type" required>
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn">Cancelar</button>
-          <button type="submit">Salvar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Adicionar Transação -->
-  <div id="add-transaction-modal" class="modal-overlay hidden modal-lg">
-    <div class="modal-content">
-      <h2>Adicionar Transação</h2>
-      <form id="add-transaction-form">
-        <div class="form-row">
-          <div class="form-group" style="flex: 2;">
-            <label for="transaction-description">Descrição</label>
-            <input type="text" id="transaction-description" placeholder="Ex: Netflix, Salário" required>
-          </div>
-          <div class="form-group" style="flex: 1;">
-            <label for="transaction-date">Data</label>
-            <input type="date" id="transaction-date" required>
-          </div>
-        </div>
+    <main class="container">
+      <div class="main-content">
         
-        <label for="transaction-account">Conta</label>
-        <select id="transaction-account" required></select>
-
-        <label>Tipo de Lançamento</label>
-        <div id="transaction-type-selector" class="card-selector-container"></div>
-        <input type="hidden" id="transaction-type" value="single" required>
-
-        <div id="dynamic-transaction-fields"></div>
-
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn">Cancelar</button>
-          <button type="submit">Adicionar</button>
+        <div class="view-switcher-container">
+          <button class="view-switch-btn active" data-view="monthly">Visão Mensal</button>
+          <button class="view-switch-btn" data-view="panorama">Visão Panorama</button>
         </div>
-      </form>
-    </div>
-  </div>
 
-  <!-- Modal Editar Transação -->
-  <div id="edit-transaction-modal" class="modal-overlay hidden modal-lg">
-    <div class="modal-content">
-      <h2>Editar Transação</h2>
-      <form id="edit-transaction-form">
-        <input type="hidden" id="edit-transaction-id">
-        <div class="form-row">
-          <div class="form-group" style="flex: 2;">
-            <label for="edit-transaction-description">Descrição</label>
-            <input type="text" id="edit-transaction-description" required>
+        <div id="monthly-view">
+          <div id="date-navigation-container">
+            <div id="year-selector-cards"></div>
+            <div id="month-tabs-container"></div>
           </div>
-          <div class="form-group" style="flex: 1;">
-            <label for="edit-transaction-date">Data</label>
-            <input type="date" id="edit-transaction-date" required>
-          </div>
+          <div id="accounts-list"></div>
         </div>
-        
-        <label for="edit-transaction-account">Conta</label>
-        <select id="edit-transaction-account" required></select>
 
-        <label>Tipo de Lançamento</label>
-        <div id="edit-transaction-type-selector" class="card-selector-container"></div>
-        <input type="hidden" id="edit-transaction-type" required>
-
-        <div id="edit-dynamic-transaction-fields"></div>
-
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn">Cancelar</button>
-          <button type="submit">Salvar Alterações</button>
+        <div id="panorama-view" class="hidden">
+          <div id="panorama-card-grid"></div>
         </div>
-      </form>
+
+      </div>
+    </main>
+
+    <!-- Botão de Ação Flutuante (FAB) -->
+    <div class="fab-container">
+      <div class="fab-actions hidden">
+        <div class="fab-action">
+          <span class="fab-label">Gerenciar Recorrências</span>
+          <button class="fab-action-btn" id="open-manage-recurring-modal-btn">⚙️</button>
+        </div>
+        <div class="fab-action">
+          <span class="fab-label">Adicionar Conta</span>
+          <button class="fab-action-btn" id="open-account-modal-btn">&#x1F4B3;</button>
+        </div>
+        <div class="fab-action">
+          <span class="fab-label">Adicionar Transação</span>
+          <button class="fab-action-btn" id="open-add-transaction-modal-btn">&#x1F4B5;</button>
+        </div>
+      </div>
+      <button class="fab-main-btn" id="fab-main-btn">+</button>
     </div>
-  </div>
 
-  <!-- Modal de Confirmação de Exclusão -->
-    <div id="delete-confirmation-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h2 id="delete-modal-title">Confirmar Exclusão</h2>
-            <p id="delete-modal-text">Selecione o que deseja excluir:</p>
-            <div class="modal-actions-vertical">
-                <button id="delete-single-btn">Excluir Somente Esta</button>
-                <button id="delete-future-btn">Excluir Esta e as Futuras</button>
-                <button id="delete-rule-btn">Excluir Regra de Recorrência</button>
-                <button type="button" class="cancel-btn">Cancelar</button>
+    <!-- MODAIS -->
+
+    <!-- Modal Gerenciar Recorrências -->
+    <div id="manage-recurring-modal" class="modal-overlay hidden modal-lg">
+      <div class="modal-content">
+        <h2>Gerenciar Recorrências</h2>
+        <p>Aqui você pode ver e apagar suas regras de transações recorrentes.</p>
+        <ul id="recurring-rules-list" class="item-list"></ul>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Unificado para Adicionar/Editar Conta -->
+    <div id="account-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <h2 id="account-modal-title">Adicionar Conta</h2>
+        <form id="account-form">
+          <input type="hidden" id="account-id">
+          <label for="account-name">Nome da Conta</label>
+          <input type="text" id="account-name" placeholder="Ex: ITAU BLACK" required>
+          <label>Tipo</label>
+          <div id="account-type-selector" class="card-selector-container"></div>
+          <input type="hidden" id="account-type" required>
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn">Cancelar</button>
+            <button type="submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Adicionar Transação -->
+    <div id="add-transaction-modal" class="modal-overlay hidden modal-lg">
+      <div class="modal-content">
+        <h2>Adicionar Transação</h2>
+        <form id="add-transaction-form">
+          <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+              <label for="transaction-description">Descrição</label>
+              <input type="text" id="transaction-description" placeholder="Ex: Netflix, Salário" required>
             </div>
-        </div>
+            <div class="form-group" style="flex: 1;">
+              <label for="transaction-date">Data</label>
+              <input type="date" id="transaction-date" required>
+            </div>
+          </div>
+          
+          <label for="transaction-account">Conta</label>
+          <select id="transaction-account" required></select>
+
+          <label>Tipo de Lançamento</label>
+          <div id="transaction-type-selector" class="card-selector-container"></div>
+          <input type="hidden" id="transaction-type" value="single" required>
+
+          <div id="dynamic-transaction-fields"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn">Cancelar</button>
+            <button type="submit">Adicionar</button>
+          </div>
+        </form>
+      </div>
     </div>
+
+    <!-- Modal Editar Transação -->
+    <div id="edit-transaction-modal" class="modal-overlay hidden modal-lg">
+      <div class="modal-content">
+        <h2>Editar Transação</h2>
+        <form id="edit-transaction-form">
+          <input type="hidden" id="edit-transaction-id">
+          <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+              <label for="edit-transaction-description">Descrição</label>
+              <input type="text" id="edit-transaction-description" required>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label for="edit-transaction-date">Data</label>
+              <input type="date" id="edit-transaction-date" required>
+            </div>
+          </div>
+          
+          <label for="edit-transaction-account">Conta</label>
+          <select id="edit-transaction-account" required></select>
+
+          <label>Tipo de Lançamento</label>
+          <div id="edit-transaction-type-selector" class="card-selector-container"></div>
+          <input type="hidden" id="edit-transaction-type" required>
+
+          <div id="edit-dynamic-transaction-fields"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn">Cancelar</button>
+            <button type="submit">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+      <div id="delete-confirmation-modal" class="modal-overlay hidden">
+          <div class="modal-content">
+              <h2 id="delete-modal-title">Confirmar Exclusão</h2>
+              <p id="delete-modal-text">Selecione o que deseja excluir:</p>
+              <div class="modal-actions-vertical">
+                  <button id="delete-single-btn">Excluir Somente Esta</button>
+                  <button id="delete-future-btn">Excluir Esta e as Futuras</button>
+                  <button id="delete-rule-btn">Excluir Regra de Recorrência</button>
+                  <button type="button" class="cancel-btn">Cancelar</button>
+              </div>
+          </div>
+      </div>
+
+  </div>
 
   <script src="js/main.js"></script>
 </body>
