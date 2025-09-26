@@ -1,4 +1,4 @@
-require('dotenv').config(); // Carrega as variáveis do .env no início de tudo
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
@@ -7,6 +7,9 @@ const passport = require('passport');
 
 const app = express();
 const port = 3000;
+
+// Confie no proxy do Render para determinar o protocolo (http vs https)
+app.set('trust proxy', 1);
 
 // Middleware
 app.use(cors());
@@ -17,7 +20,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Em produção, com HTTPS, deve ser true
+  cookie: { secure: process.env.NODE_ENV === 'production' } // Em produção, o cookie só trafega em HTTPS
 }));
 
 // Inicialização do Passport
@@ -32,7 +35,7 @@ const recurringTransactionRoutes = require('./routes/recurringTransactionRoutes'
 const summaryRoutes = require('./routes/summaryRoutes');
 const panoramaRoutes = require('./routes/panoramaRoutes');
 
-// A ordem é importante. Rotas de autenticação primeiro.
+// A ordem é importante
 app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/transactions', transactionRoutes);
