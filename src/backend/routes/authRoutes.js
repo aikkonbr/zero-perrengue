@@ -7,13 +7,11 @@ const router = express.Router();
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    // CORREÇÃO: Apontando para a URL correta do backend, sem o '-api'
-    callbackURL: 'https://zero-perrengue.onrender.com/api/auth/google/callback',
+    // CORREÇÃO DEFINITIVA: Usando um caminho relativo. O Passport irá construir a URL completa dinamicamente.
+    callbackURL: '/api/auth/google/callback',
     scope: ['profile', 'email']
   },
   (accessToken, refreshToken, profile, done) => {
-    // O 'profile' contém os dados do usuário do Google.
-    // O ID único do Google é a melhor forma de identificar o usuário.
     const user = {
       id: profile.id,
       displayName: profile.displayName,
@@ -41,9 +39,8 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback',
   passport.authenticate('google', { 
-    // Redireciona para o frontend em caso de sucesso ou falha
     successRedirect: 'https://zero-perrengue-app.onrender.com',
-    failureRedirect: 'https://zero-perrengue-app.onrender.com' 
+    failureRedirect: 'https://zero-perrengue-app.onrender.com' // Em caso de falha, volta para a tela de login
   })
 );
 
@@ -58,7 +55,6 @@ router.get('/status', (req, res) => {
 router.get('/logout', (req, res, next) => {
   req.logout(function(err) {
     if (err) { return next(err); }
-    // Redireciona para a página inicial do frontend após o logout
     res.redirect('https://zero-perrengue-app.onrender.com');
   });
 });
