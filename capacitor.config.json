@@ -1,0 +1,8 @@
+{
+  "appId": "com.zeroperrengue.app",
+  "appName": "Zero Perrengue",
+  "webDir": "src/frontend",
+  "server": {
+    "cleartext": true
+  }
+}

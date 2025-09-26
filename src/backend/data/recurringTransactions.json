@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "accountId": 7,
+    "description": "ADIANTAMENTO",
+    "value": 2758.4,
+    "dayOfMonth": 14,
+    "startDate": "2025-10-15T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "accountId": 7,
+    "description": "PAGAMENTO",
+    "value": 2415.3,
+    "dayOfMonth": 29,
+    "startDate": "2025-10-30T00:00:00.000Z"
+  }
+]

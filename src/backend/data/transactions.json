@@ -1,0 +1,1145 @@
+[
+  {
+    "id": 8,
+    "accountId": 5,
+    "description": "Kardian (1/54)",
+    "value": 2433.85,
+    "date": "2025-09-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 1,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 9,
+    "accountId": 5,
+    "description": "Kardian (2/54)",
+    "value": 2433.85,
+    "date": "2025-10-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 2,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 10,
+    "accountId": 5,
+    "description": "Kardian (3/54)",
+    "value": 2433.85,
+    "date": "2025-11-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 3,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 11,
+    "accountId": 5,
+    "description": "Kardian (4/54)",
+    "value": 2433.85,
+    "date": "2025-12-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 4,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 12,
+    "accountId": 5,
+    "description": "Kardian (5/54)",
+    "value": 2433.85,
+    "date": "2026-01-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 5,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 13,
+    "accountId": 5,
+    "description": "Kardian (6/54)",
+    "value": 2433.85,
+    "date": "2026-02-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 6,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 14,
+    "accountId": 5,
+    "description": "Kardian (7/54)",
+    "value": 2433.85,
+    "date": "2026-03-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 7,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 15,
+    "accountId": 5,
+    "description": "Kardian (8/54)",
+    "value": 2433.85,
+    "date": "2026-04-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 8,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 16,
+    "accountId": 5,
+    "description": "Kardian (9/54)",
+    "value": 2433.85,
+    "date": "2026-05-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 9,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 17,
+    "accountId": 5,
+    "description": "Kardian (10/54)",
+    "value": 2433.85,
+    "date": "2026-06-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 10,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 18,
+    "accountId": 5,
+    "description": "Kardian (11/54)",
+    "value": 2433.85,
+    "date": "2026-07-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 11,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 19,
+    "accountId": 5,
+    "description": "Kardian (12/54)",
+    "value": 2433.85,
+    "date": "2026-08-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 12,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 20,
+    "accountId": 5,
+    "description": "Kardian (13/54)",
+    "value": 2433.85,
+    "date": "2026-09-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 13,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 21,
+    "accountId": 5,
+    "description": "Kardian (14/54)",
+    "value": 2433.85,
+    "date": "2026-10-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 14,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 22,
+    "accountId": 5,
+    "description": "Kardian (15/54)",
+    "value": 2433.85,
+    "date": "2026-11-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 15,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 23,
+    "accountId": 5,
+    "description": "Kardian (16/54)",
+    "value": 2433.85,
+    "date": "2026-12-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 16,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 24,
+    "accountId": 5,
+    "description": "Kardian (17/54)",
+    "value": 2433.85,
+    "date": "2027-01-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 17,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 25,
+    "accountId": 5,
+    "description": "Kardian (18/54)",
+    "value": 2433.85,
+    "date": "2027-02-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 18,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 26,
+    "accountId": 5,
+    "description": "Kardian (19/54)",
+    "value": 2433.85,
+    "date": "2027-03-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 19,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 27,
+    "accountId": 5,
+    "description": "Kardian (20/54)",
+    "value": 2433.85,
+    "date": "2027-04-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 20,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 28,
+    "accountId": 5,
+    "description": "Kardian (21/54)",
+    "value": 2433.85,
+    "date": "2027-05-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 21,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 29,
+    "accountId": 5,
+    "description": "Kardian (22/54)",
+    "value": 2433.85,
+    "date": "2027-06-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 22,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 30,
+    "accountId": 5,
+    "description": "Kardian (23/54)",
+    "value": 2433.85,
+    "date": "2027-07-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 23,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 31,
+    "accountId": 5,
+    "description": "Kardian (24/54)",
+    "value": 2433.85,
+    "date": "2027-08-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 24,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 32,
+    "accountId": 5,
+    "description": "Kardian (25/54)",
+    "value": 2433.85,
+    "date": "2027-09-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 25,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 33,
+    "accountId": 5,
+    "description": "Kardian (26/54)",
+    "value": 2433.85,
+    "date": "2027-10-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 26,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 34,
+    "accountId": 5,
+    "description": "Kardian (27/54)",
+    "value": 2433.85,
+    "date": "2027-11-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 27,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 35,
+    "accountId": 5,
+    "description": "Kardian (28/54)",
+    "value": 2433.85,
+    "date": "2027-12-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 28,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 36,
+    "accountId": 5,
+    "description": "Kardian (29/54)",
+    "value": 2433.85,
+    "date": "2028-01-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 29,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 37,
+    "accountId": 5,
+    "description": "Kardian (30/54)",
+    "value": 2433.85,
+    "date": "2028-02-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 30,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 38,
+    "accountId": 5,
+    "description": "Kardian (31/54)",
+    "value": 2433.85,
+    "date": "2028-03-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 31,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 39,
+    "accountId": 5,
+    "description": "Kardian (32/54)",
+    "value": 2433.85,
+    "date": "2028-04-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 32,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 40,
+    "accountId": 5,
+    "description": "Kardian (33/54)",
+    "value": 2433.85,
+    "date": "2028-05-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 33,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 41,
+    "accountId": 5,
+    "description": "Kardian (34/54)",
+    "value": 2433.85,
+    "date": "2028-06-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 34,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 42,
+    "accountId": 5,
+    "description": "Kardian (35/54)",
+    "value": 2433.85,
+    "date": "2028-07-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 35,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 43,
+    "accountId": 5,
+    "description": "Kardian (36/54)",
+    "value": 2433.85,
+    "date": "2028-08-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 36,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 44,
+    "accountId": 5,
+    "description": "Kardian (37/54)",
+    "value": 2433.85,
+    "date": "2028-09-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 37,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 45,
+    "accountId": 5,
+    "description": "Kardian (38/54)",
+    "value": 2433.85,
+    "date": "2028-10-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 38,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 46,
+    "accountId": 5,
+    "description": "Kardian (39/54)",
+    "value": 2433.85,
+    "date": "2028-11-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 39,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 47,
+    "accountId": 5,
+    "description": "Kardian (40/54)",
+    "value": 2433.85,
+    "date": "2028-12-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 40,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 48,
+    "accountId": 5,
+    "description": "Kardian (41/54)",
+    "value": 2433.85,
+    "date": "2029-01-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 41,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 49,
+    "accountId": 5,
+    "description": "Kardian (42/54)",
+    "value": 2433.85,
+    "date": "2029-02-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 42,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 50,
+    "accountId": 5,
+    "description": "Kardian (43/54)",
+    "value": 2433.85,
+    "date": "2029-03-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 43,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 51,
+    "accountId": 5,
+    "description": "Kardian (44/54)",
+    "value": 2433.85,
+    "date": "2029-04-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 44,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 52,
+    "accountId": 5,
+    "description": "Kardian (45/54)",
+    "value": 2433.85,
+    "date": "2029-05-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 45,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 53,
+    "accountId": 5,
+    "description": "Kardian (46/54)",
+    "value": 2433.85,
+    "date": "2029-06-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 46,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 54,
+    "accountId": 5,
+    "description": "Kardian (47/54)",
+    "value": 2433.85,
+    "date": "2029-07-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 47,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 55,
+    "accountId": 5,
+    "description": "Kardian (48/54)",
+    "value": 2433.85,
+    "date": "2029-08-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 48,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 56,
+    "accountId": 5,
+    "description": "Kardian (49/54)",
+    "value": 2433.85,
+    "date": "2029-09-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 49,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 57,
+    "accountId": 5,
+    "description": "Kardian (50/54)",
+    "value": 2433.85,
+    "date": "2029-10-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 50,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 58,
+    "accountId": 5,
+    "description": "Kardian (51/54)",
+    "value": 2433.85,
+    "date": "2029-11-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 51,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 59,
+    "accountId": 5,
+    "description": "Kardian (52/54)",
+    "value": 2433.85,
+    "date": "2029-12-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 52,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 60,
+    "accountId": 5,
+    "description": "Kardian (53/54)",
+    "value": 2433.85,
+    "date": "2030-01-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 53,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 61,
+    "accountId": 5,
+    "description": "Kardian (54/54)",
+    "value": 2433.85,
+    "date": "2030-02-28T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 54,
+      "total": 54
+    },
+    "purchaseId": 1721336401002
+  },
+  {
+    "id": 91,
+    "accountId": 2,
+    "description": "Emprestimo (2/25)",
+    "value": 1141.97,
+    "date": "2025-10-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 2,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 92,
+    "accountId": 2,
+    "description": "Emprestimo (3/25)",
+    "value": 1141.97,
+    "date": "2025-11-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 3,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 93,
+    "accountId": 2,
+    "description": "Emprestimo (4/25)",
+    "value": 1141.97,
+    "date": "2025-12-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 4,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 94,
+    "accountId": 2,
+    "description": "Emprestimo (5/25)",
+    "value": 1141.97,
+    "date": "2026-01-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 5,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 95,
+    "accountId": 2,
+    "description": "Emprestimo (6/25)",
+    "value": 1141.97,
+    "date": "2026-02-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 6,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 96,
+    "accountId": 2,
+    "description": "Emprestimo (7/25)",
+    "value": 1141.97,
+    "date": "2026-03-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 7,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 97,
+    "accountId": 2,
+    "description": "Emprestimo (8/25)",
+    "value": 1141.97,
+    "date": "2026-04-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 8,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 98,
+    "accountId": 2,
+    "description": "Emprestimo (9/25)",
+    "value": 1141.97,
+    "date": "2026-05-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 9,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 99,
+    "accountId": 2,
+    "description": "Emprestimo (10/25)",
+    "value": 1141.97,
+    "date": "2026-06-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 10,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 100,
+    "accountId": 2,
+    "description": "Emprestimo (11/25)",
+    "value": 1141.97,
+    "date": "2026-07-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 11,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 101,
+    "accountId": 2,
+    "description": "Emprestimo (12/25)",
+    "value": 1141.97,
+    "date": "2026-08-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 12,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 102,
+    "accountId": 2,
+    "description": "Emprestimo (13/25)",
+    "value": 1141.97,
+    "date": "2026-09-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 13,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 103,
+    "accountId": 2,
+    "description": "Emprestimo (14/25)",
+    "value": 1141.97,
+    "date": "2026-10-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 14,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 104,
+    "accountId": 2,
+    "description": "Emprestimo (15/25)",
+    "value": 1141.97,
+    "date": "2026-11-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 15,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 105,
+    "accountId": 2,
+    "description": "Emprestimo (16/25)",
+    "value": 1141.97,
+    "date": "2026-12-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 16,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 106,
+    "accountId": 2,
+    "description": "Emprestimo (17/25)",
+    "value": 1141.97,
+    "date": "2027-01-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 17,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 107,
+    "accountId": 2,
+    "description": "Emprestimo (18/25)",
+    "value": 1141.97,
+    "date": "2027-02-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 18,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 108,
+    "accountId": 2,
+    "description": "Emprestimo (19/25)",
+    "value": 1141.97,
+    "date": "2027-03-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 19,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 109,
+    "accountId": 2,
+    "description": "Emprestimo (20/25)",
+    "value": 1141.97,
+    "date": "2027-04-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 20,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 110,
+    "accountId": 2,
+    "description": "Emprestimo (21/25)",
+    "value": 1141.97,
+    "date": "2027-05-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 21,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 111,
+    "accountId": 2,
+    "description": "Emprestimo (22/25)",
+    "value": 1141.97,
+    "date": "2027-06-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 22,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 112,
+    "accountId": 2,
+    "description": "Emprestimo (23/25)",
+    "value": 1141.97,
+    "date": "2027-07-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 23,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 113,
+    "accountId": 2,
+    "description": "Emprestimo (24/25)",
+    "value": 1141.97,
+    "date": "2027-08-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 24,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 114,
+    "accountId": 2,
+    "description": "Emprestimo (25/25)",
+    "value": 1141.97,
+    "date": "2027-09-24T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 25,
+      "total": 25
+    },
+    "purchaseId": 1721336401004
+  },
+  {
+    "id": 115,
+    "accountId": 6,
+    "description": "Terraplanagem (1/5)",
+    "value": 153,
+    "date": "2025-10-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 1,
+      "total": 5
+    },
+    "purchaseId": 1721336401005
+  },
+  {
+    "id": 116,
+    "accountId": 6,
+    "description": "Terraplanagem (2/5)",
+    "value": 153,
+    "date": "2025-11-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 2,
+      "total": 5
+    },
+    "purchaseId": 1721336401005
+  },
+  {
+    "id": 117,
+    "accountId": 6,
+    "description": "Terraplanagem (3/5)",
+    "value": 153,
+    "date": "2025-12-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 3,
+      "total": 5
+    },
+    "purchaseId": 1721336401005
+  },
+  {
+    "id": 118,
+    "accountId": 6,
+    "description": "Terraplanagem (4/5)",
+    "value": 153,
+    "date": "2026-01-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 4,
+      "total": 5
+    },
+    "purchaseId": 1721336401005
+  },
+  {
+    "id": 119,
+    "accountId": 6,
+    "description": "Terraplanagem (5/5)",
+    "value": 153,
+    "date": "2026-02-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 5,
+      "total": 5
+    },
+    "purchaseId": 1721336401005
+  },
+  {
+    "id": 120,
+    "accountId": 7,
+    "description": "saldo da conta",
+    "value": 1577.59,
+    "date": "2025-09-24T00:00:00.000Z",
+    "installmentDetails": null,
+    "purchaseId": null
+  },
+  {
+    "id": 121,
+    "accountId": 7,
+    "description": "Pagamento",
+    "value": 2415.3,
+    "date": "2025-09-30T00:00:00.000Z",
+    "installmentDetails": null,
+    "purchaseId": null
+  },
+  {
+    "id": 122,
+    "accountId": 3,
+    "description": "fatura Atual",
+    "value": 99.07,
+    "date": "2025-09-24T00:00:00.000Z",
+    "installmentDetails": null,
+    "purchaseId": null
+  },
+  {
+    "id": 123,
+    "accountId": 6,
+    "description": "Presente Cardoso (1/10)",
+    "value": 34.7,
+    "date": "2025-10-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 1,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 124,
+    "accountId": 6,
+    "description": "Presente Cardoso (2/10)",
+    "value": 34.7,
+    "date": "2025-11-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 2,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 125,
+    "accountId": 6,
+    "description": "Presente Cardoso (3/10)",
+    "value": 34.7,
+    "date": "2025-12-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 3,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 126,
+    "accountId": 6,
+    "description": "Presente Cardoso (4/10)",
+    "value": 34.7,
+    "date": "2026-01-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 4,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 127,
+    "accountId": 6,
+    "description": "Presente Cardoso (5/10)",
+    "value": 34.7,
+    "date": "2026-02-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 5,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 128,
+    "accountId": 6,
+    "description": "Presente Cardoso (6/10)",
+    "value": 34.7,
+    "date": "2026-03-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 6,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 129,
+    "accountId": 6,
+    "description": "Presente Cardoso (7/10)",
+    "value": 34.7,
+    "date": "2026-04-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 7,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 130,
+    "accountId": 6,
+    "description": "Presente Cardoso (8/10)",
+    "value": 34.7,
+    "date": "2026-05-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 8,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 131,
+    "accountId": 6,
+    "description": "Presente Cardoso (9/10)",
+    "value": 34.7,
+    "date": "2026-06-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 9,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  },
+  {
+    "id": 132,
+    "accountId": 6,
+    "description": "Presente Cardoso (10/10)",
+    "value": 34.7,
+    "date": "2026-07-20T00:00:00.000Z",
+    "installmentDetails": {
+      "current": 10,
+      "total": 10
+    },
+    "purchaseId": 1758681749627
+  }
+]

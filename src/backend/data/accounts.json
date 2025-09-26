@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "ITAU BLACK",
+    "type": "CARTAO_DE_CREDITO"
+  },
+  {
+    "id": 2,
+    "name": "CARREFOUR",
+    "type": "CARTAO_DE_CREDITO"
+  },
+  {
+    "id": 3,
+    "name": "NU BANK",
+    "type": "CARTAO_DE_CREDITO"
+  },
+  {
+    "id": 4,
+    "name": "MERCADO PAGO",
+    "type": "CARTAO_DE_CREDITO"
+  },
+  {
+    "id": 5,
+    "name": "FINANCIAMENTO",
+    "type": "DIVIDA_FIXA"
+  },
+  {
+    "id": 6,
+    "name": "DIVIDAS FAMILIARES",
+    "type": "DIVIDA_FIXA"
+  },
+  {
+    "id": 7,
+    "name": "SALÁRIO",
+    "type": "PROVENTO"
+  }
+]
