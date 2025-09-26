@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const apiUrl = 'https://zero-perrengue-api.onrender.com/api';
+  const apiUrl = 'https://zero-perrengue.onrender.com/api';
 
     // --- UI Elements ---
   const summaryBar = document.getElementById('summary-bar');
