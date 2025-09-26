@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const apiUrl = 'http://192.168.31.180:3000/api';
+  const apiUrl = 'https://zero-perrengue-api.onrender.com/api';
 
-  // --- UI Elements ---
+    // --- UI Elements ---
   const summaryBar = document.getElementById('summary-bar');
   const monthlyView = document.getElementById('monthly-view');
   const panoramaView = document.getElementById('panorama-view');
