@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const apiUrl = 'http://localhost:3000/api';
-
+  // const apiUrl = 'http://localhost:3000/api';
+  const apiUrl = 'https://zero-perrengue.onrender.com/api';
   // --- Views ---
   const loginView = document.getElementById('login-view');
   const appView = document.getElementById('app-view');
