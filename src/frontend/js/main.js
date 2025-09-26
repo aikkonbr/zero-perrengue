@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // const apiUrl = 'http://localhost:3000/api';
-  const apiUrl = 'https://zero-perrengue.onrender.com/api';
+  const apiUrl = 'https://zero-perrengue.onrender.com/api'; // URL de produção
+
   // --- Views ---
   const loginView = document.getElementById('login-view');
   const appView = document.getElementById('app-view');
@@ -41,6 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   // --- Core Functions ---
+
+  const fetchWithCredentials = (url, options = {}) => {
+    return fetch(url, { ...options, credentials: 'include' });
+  };
 
   const getAccountTypeIcon = (type) => {
     const option = accountTypeOptions.find(opt => opt.value === type);
@@ -91,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const populateAccountsDropdown = async (selectElement, selectedAccountId) => {
       selectElement.innerHTML = '<option value="" disabled>Selecione uma conta</option>';
-      const accountsResponse = await fetch(`${apiUrl}/accounts`);
+      const accountsResponse = await fetchWithCredentials(`${apiUrl}/accounts`);
       const accounts = await accountsResponse.json();
       accounts.forEach(account => selectElement.appendChild(new Option(account.name, account.id)));
       if (selectedAccountId) {
@@ -104,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const yearSelectorCards = document.getElementById('year-selector-cards');
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     monthTabsContainer.innerHTML = months.map((month, index) => `<button class="month-tab" data-month="${index + 1}">${month}</button>`).join('');
-    const allTransactionsResponse = await fetch(`${apiUrl}/transactions`);
+    const allTransactionsResponse = await fetchWithCredentials(`${apiUrl}/transactions`);
     const allTransactions = await allTransactionsResponse.json();
     const years = new Set(allTransactions.map(t => new Date(t.date).getFullYear()));
     years.add(new Date().getFullYear());
@@ -120,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderMonthlyView = async () => {
     if (!selectedMonth || !selectedYear) return;
     try {
-        const balanceResponse = await fetch(`${apiUrl}/summary/opening-balance?month=${selectedMonth}&year=${selectedYear}`);
+        const balanceResponse = await fetchWithCredentials(`${apiUrl}/summary/opening-balance?month=${selectedMonth}&year=${selectedYear}`);
         if (!balanceResponse.ok) throw new Error('Falha ao buscar saldo anterior.');
         const data = await balanceResponse.json();
         if (data.openingBalance === undefined) {
@@ -129,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const { openingBalance } = data;
 
-        const accountsResponse = await fetch(`${apiUrl}/accounts`);
+        const accountsResponse = await fetchWithCredentials(`${apiUrl}/accounts`);
         const accounts = await accountsResponse.json();
         accountsListDiv.innerHTML = '';
 
@@ -137,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const transactionUrl = `${apiUrl}/transactions?month=${selectedMonth}&year=${selectedYear}`;
 
         for (const account of accounts) {
-            const response = await fetch(`${transactionUrl}&accountId=${account.id}`);
+            const response = await fetchWithCredentials(`${transactionUrl}&accountId=${account.id}`);
             const transactions = await response.json();
             const accountContainer = document.createElement('div');
             accountContainer.className = 'account-container';
@@ -216,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderPanoramaView = async () => {
     const panoramaGrid = document.getElementById('panorama-card-grid');
     try {
-        const response = await fetch(`${apiUrl}/panorama`);
+        const response = await fetchWithCredentials(`${apiUrl}/panorama`);
         if (!response.ok) throw new Error('Falha ao carregar dados do panorama.');
         const monthlyData = await response.json();
 
@@ -266,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderRecurringRules = async () => {
     const list = document.getElementById('recurring-rules-list');
     try {
-      const response = await fetch(`${apiUrl}/recurring-transactions`);
+      const response = await fetchWithCredentials(`${apiUrl}/recurring-transactions`);
       const rules = await response.json();
       list.innerHTML = '';
       if (rules.length === 0) {
@@ -363,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const ruleId = event.target.dataset.id;
       if (confirm('Tem certeza que deseja apagar esta regra de recorrência?')) {
         try {
-          await fetch(`${apiUrl}/recurring-transactions/${ruleId}`, { method: 'DELETE' });
+          await fetchWithCredentials(`${apiUrl}/recurring-transactions/${ruleId}`, { method: 'DELETE' });
           await renderRecurringRules();
           await renderMonthlyView();
         } catch (error) {
@@ -381,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = id ? `${apiUrl}/accounts/${id}` : `${apiUrl}/accounts`;
     const method = id ? 'PUT' : 'POST';
     try {
-      await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, type }) });
+      await fetchWithCredentials(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, type }) });
       closeModal(accountModal);
       await initializeApp();
     } catch (error) { alert(error.message); }
@@ -401,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dayOfMonth: type === 'recurring' ? new Date(addTransactionForm.querySelector('#transaction-date').value).getDate() : null
       };
       const targetUrl = type === 'recurring' ? `${apiUrl}/recurring-transactions` : `${apiUrl}/transactions`;
-      await fetch(targetUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      await fetchWithCredentials(targetUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       closeModal(addTransactionModal);
       await initializeApp();
     } catch (error) { alert(error.message); }
@@ -437,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (type === 'single') {
             if (confirm('Tem certeza que deseja deletar esta transação?')) {
-                await fetch(`${apiUrl}/transactions/${id}`, { method: 'DELETE' });
+                await fetchWithCredentials(`${apiUrl}/transactions/${id}`, { method: 'DELETE' });
                 await initializeApp();
             }
         } else {
@@ -461,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (button.classList.contains('edit-transaction-btn')) {
       const transactionId = button.dataset.id;
       try {
-        const transactionResponse = await fetch(`${apiUrl}/transactions/${transactionId}`);
+        const transactionResponse = await fetchWithCredentials(`${apiUrl}/transactions/${transactionId}`);
         if (!transactionResponse.ok) throw new Error('Transação não encontrada.');
         const transaction = await transactionResponse.json();
 
@@ -494,20 +498,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Delete Confirmation Modal Listeners ---
   document.getElementById('delete-single-btn').addEventListener('click', async () => {
-    await fetch(`${apiUrl}/transactions/${transactionToDelete.id}`, { method: 'DELETE' });
+    await fetchWithCredentials(`${apiUrl}/transactions/${transactionToDelete.id}`, { method: 'DELETE' });
     closeModal(deleteConfirmationModal);
     await initializeApp();
   });
 
   document.getElementById('delete-future-btn').addEventListener('click', async () => {
-    await fetch(`${apiUrl}/transactions/${transactionToDelete.id}?scope=future`, { method: 'DELETE' });
+    await fetchWithCredentials(`${apiUrl}/transactions/${transactionToDelete.id}?scope=future`, { method: 'DELETE' });
     closeModal(deleteConfirmationModal);
     await initializeApp();
   });
 
   document.getElementById('delete-rule-btn').addEventListener('click', async () => {
     const ruleId = Math.abs(transactionToDelete.id);
-    await fetch(`${apiUrl}/recurring-transactions/${ruleId}`, { method: 'DELETE' });
+    await fetchWithCredentials(`${apiUrl}/recurring-transactions/${ruleId}`, { method: 'DELETE' });
     closeModal(deleteConfirmationModal);
     await initializeApp();
   });
@@ -536,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      await fetch(`${apiUrl}/transactions/${id}`, { 
+      await fetchWithCredentials(`${apiUrl}/transactions/${id}`, { 
         method: 'PUT', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify(payload) 
@@ -586,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch(`${apiUrl}/auth/status`);
+      const response = await fetchWithCredentials(`${apiUrl}/auth/status`);
       const data = await response.json();
       if (data.loggedIn) {
         loginView.classList.add('hidden');
