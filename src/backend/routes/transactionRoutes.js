@@ -12,74 +12,83 @@ const isAuthenticated = (req, res, next) => {
 };
 router.use(isAuthenticated);
 
-// Rota para LER transações (físicas + virtuais recorrentes)
+// Rota para LER transações (agora com lógica condicional)
 router.get('/', async (req, res) => {
   try {
     const userId = req.user.id;
     const { accountId, month, year } = req.query;
 
-    if (!month || !year) {
-      return res.status(400).json({ message: 'Mês e ano são obrigatórios.' });
-    }
+    // CASO 1: A requisição é para um mês específico (visão mensal)
+    if (month && year) {
+      const targetMonth = parseInt(month) - 1;
+      const targetYear = parseInt(year);
+      const startDate = new Date(targetYear, targetMonth, 1);
+      const endDate = new Date(targetYear, targetMonth + 1, 1);
 
-    const targetMonth = parseInt(month) - 1;
-    const targetYear = parseInt(year);
-    const startDate = new Date(targetYear, targetMonth, 1);
-    const endDate = new Date(targetYear, targetMonth + 1, 1);
-
-    // Busca transações físicas no período
-    const transactionsSnapshot = await db.collection('transactions')
-      .where('userId', '==', userId)
-      .where('date', '>=', Timestamp.fromDate(startDate))
-      .where('date', '<', Timestamp.fromDate(endDate))
-      .get();
-    
-    const physicalTransactions = [];
-    transactionsSnapshot.forEach(doc => {
-      const data = doc.data();
-      physicalTransactions.push({ 
-        id: doc.id, 
-        ...data,
-        date: data.date.toDate(), // Converte Timestamp do Firestore para Date do JS
-        transactionType: data.installmentDetails ? 'installment' : 'single'
+      const transactionsSnapshot = await db.collection('transactions')
+        .where('userId', '==', userId)
+        .where('date', '>=', Timestamp.fromDate(startDate))
+        .where('date', '<', Timestamp.fromDate(endDate))
+        .get();
+      
+      const physicalTransactions = [];
+      transactionsSnapshot.forEach(doc => {
+        const data = doc.data();
+        physicalTransactions.push({ 
+          id: doc.id, 
+          ...data,
+          date: data.date.toDate(),
+          transactionType: data.installmentDetails ? 'installment' : 'single'
+        });
       });
-    });
 
-    // Gera transações recorrentes virtuais para o período
-    const recurringRulesSnapshot = await db.collection('recurringRules').where('userId', '==', userId).get();
-    const virtualTransactions = [];
-    recurringRulesSnapshot.forEach(doc => {
-      const rule = doc.data();
-      const ruleStartDate = rule.startDate.toDate();
-      ruleStartDate.setDate(1);
-      ruleStartDate.setHours(0, 0, 0, 0);
+      const recurringRulesSnapshot = await db.collection('recurringRules').where('userId', '==', userId).get();
+      const virtualTransactions = [];
+      recurringRulesSnapshot.forEach(doc => {
+        const rule = doc.data();
+        const ruleStartDate = rule.startDate.toDate();
+        ruleStartDate.setDate(1);
+        ruleStartDate.setHours(0, 0, 0, 0);
 
-      if (startDate >= ruleStartDate) {
-        const recurringDate = new Date(targetYear, targetMonth, rule.dayOfMonth);
-        if (recurringDate.getMonth() === targetMonth) {
-          virtualTransactions.push({
-            id: `recurring_${doc.id}`,
-            ...rule,
-            date: recurringDate,
-            isRecurring: true,
-            transactionType: 'recurring'
-          });
+        if (startDate >= ruleStartDate) {
+          const recurringDate = new Date(targetYear, targetMonth, rule.dayOfMonth);
+          if (recurringDate.getMonth() === targetMonth) {
+            virtualTransactions.push({
+              id: `recurring_${doc.id}`,
+              ...rule,
+              date: recurringDate,
+              isRecurring: true,
+              transactionType: 'recurring'
+            });
+          }
         }
+      });
+
+      let combinedTransactions = [...physicalTransactions, ...virtualTransactions];
+
+      if (accountId) {
+        combinedTransactions = combinedTransactions.filter(t => t.accountId == parseInt(accountId));
       }
-    });
-
-    let combinedTransactions = [...physicalTransactions, ...virtualTransactions];
-
-    if (accountId) {
-      combinedTransactions = combinedTransactions.filter(t => t.accountId == parseInt(accountId));
+      return res.json(combinedTransactions);
     }
 
-    res.json(combinedTransactions);
+    // CASO 2: A requisição é para TODAS as transações (para popular a navegação de anos)
+    else {
+      const transactionsSnapshot = await db.collection('transactions').where('userId', '==', userId).get();
+      const allTransactions = [];
+      transactionsSnapshot.forEach(doc => {
+        const data = doc.data();
+        allTransactions.push({ id: doc.id, ...data, date: data.date.toDate() });
+      });
+      return res.json(allTransactions);
+    }
 
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar transações.', error: error.message });
   }
 });
+
+// As outras rotas (POST, DELETE, etc.) permanecem as mesmas...
 
 // Rota para CRIAR transações (única ou parcelada)
 router.post('/', async (req, res) => {
@@ -172,7 +181,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: 'Erro ao deletar transação.', error: error.message });
   }
 });
-
-// As rotas PUT (editar) e GET por ID único podem ser adicionadas aqui se necessário.
 
 module.exports = router;
