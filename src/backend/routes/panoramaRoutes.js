@@ -59,7 +59,7 @@ router.get('/', async (req, res) => {
 
             physicalTransactions.forEach(t => {
                 if (t.date.getFullYear() === currentYear && t.date.getMonth() === currentMonth) {
-                    const account = accounts.find(a => a.id === t.accountId);
+                    const account = accounts.find(a => a.id == t.accountId);
                     if (account) {
                         if (account.type === 'PROVENTO') monthlyIncome += t.value;
                         else monthlyExpense += t.value;
@@ -75,7 +75,7 @@ router.get('/', async (req, res) => {
                 if (loopDate >= ruleStartDate) {
                     const recurringDate = new Date(currentYear, currentMonth, rule.dayOfMonth);
                     if (recurringDate.getMonth() === currentMonth) {
-                        const account = accounts.find(a => a.id === rule.accountId);
+                        const account = accounts.find(a => a.id == rule.accountId);
                         if (account) {
                             if (account.type === 'PROVENTO') monthlyIncome += rule.value;
                             else monthlyExpense += rule.value;
@@ -119,7 +119,8 @@ router.get('/', async (req, res) => {
         let accountMonthlyTotal = 0;
 
         physicalTransactions.forEach(t => {
-          if (t.accountId.toString() === account.id.toString() && t.date.getFullYear() === currentYear && t.date.getMonth() === currentMonth) {
+          // CORREÇÃO: Comparar IDs como strings (usando ==)
+          if (t.accountId == account.id && t.date.getFullYear() === currentYear && t.date.getMonth() === currentMonth) {
             accountMonthlyTotal += t.value;
           }
         });
@@ -130,7 +131,8 @@ router.get('/', async (req, res) => {
           ruleStartDate.setHours(0,0,0,0);
           const loopDate = new Date(currentYear, currentMonth, 1);
 
-          if (rule.accountId.toString() === account.id.toString() && loopDate >= ruleStartDate) {
+          // CORREÇÃO: Comparar IDs como strings (usando ==)
+          if (rule.accountId == account.id && loopDate >= ruleStartDate) {
               const recurringDate = new Date(currentYear, currentMonth, rule.dayOfMonth);
               if (recurringDate.getMonth() === currentMonth) {
                   accountMonthlyTotal += rule.value;

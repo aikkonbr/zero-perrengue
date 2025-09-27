@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { db } = require('../firebase');
-const { Timestamp } = require('firebase-admin/firestore');
 
 // Middleware de autenticação
 const isAuthenticated = (req, res, next) => {
@@ -67,7 +66,8 @@ router.get('/opening-balance', async (req, res) => {
 
       physicalTransactions.forEach(t => {
         if (t.date.getFullYear() === currentYear && t.date.getMonth() === currentMonth) {
-          const account = accounts.find(a => a.id === t.accountId);
+          // CORREÇÃO: Comparar IDs como strings (usando ==)
+          const account = accounts.find(a => a.id == t.accountId);
           if (account) {
             if (account.type === 'PROVENTO') monthlyIncome += t.value;
             else monthlyExpense += t.value;
@@ -83,7 +83,8 @@ router.get('/opening-balance', async (req, res) => {
         if (loopDate >= ruleStartDate) {
           const recurringDate = new Date(currentYear, currentMonth, rule.dayOfMonth);
           if (recurringDate.getMonth() === currentMonth) {
-            const account = accounts.find(a => a.id === rule.accountId);
+            // CORREÇÃO: Comparar IDs como strings (usando ==)
+            const account = accounts.find(a => a.id == rule.accountId);
             if (account) {
               if (account.type === 'PROVENTO') monthlyIncome += rule.value;
               else monthlyExpense += rule.value;

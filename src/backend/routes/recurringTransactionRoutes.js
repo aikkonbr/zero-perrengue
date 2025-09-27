@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
 
     const newRule = {
       userId,
-      accountId: parseInt(accountId),
+      accountId, // CORREÇÃO: Salvar como string
       description,
       value: parseFloat(value),
       dayOfMonth: parseInt(dayOfMonth),

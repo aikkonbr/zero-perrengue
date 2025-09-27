@@ -12,13 +12,12 @@ const isAuthenticated = (req, res, next) => {
 };
 router.use(isAuthenticated);
 
-// Rota para LER transações (agora com lógica condicional)
+// Rota para LER transações
 router.get('/', async (req, res) => {
   try {
     const userId = req.user.id;
     const { accountId, month, year } = req.query;
 
-    // CASO 1: A requisição é para um mês específico (visão mensal)
     if (month && year) {
       const targetMonth = parseInt(month) - 1;
       const targetYear = parseInt(year);
@@ -67,13 +66,12 @@ router.get('/', async (req, res) => {
       let combinedTransactions = [...physicalTransactions, ...virtualTransactions];
 
       if (accountId) {
-        combinedTransactions = combinedTransactions.filter(t => t.accountId == parseInt(accountId));
+        // CORREÇÃO: Comparar IDs como strings
+        combinedTransactions = combinedTransactions.filter(t => t.accountId == accountId);
       }
       return res.json(combinedTransactions);
-    }
 
-    // CASO 2: A requisição é para TODAS as transações (para popular a navegação de anos)
-    else {
+    } else {
       const transactionsSnapshot = await db.collection('transactions').where('userId', '==', userId).get();
       const allTransactions = [];
       transactionsSnapshot.forEach(doc => {
@@ -88,9 +86,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// As outras rotas (POST, DELETE, etc.) permanecem as mesmas...
-
-// Rota para CRIAR transações (única ou parcelada)
+// Rota para CRIAR transações
 router.post('/', async (req, res) => {
   try {
     const userId = req.user.id;
@@ -104,27 +100,27 @@ router.post('/', async (req, res) => {
     const initialDate = new Date(date);
 
     if (transactionType === 'installment' && numberOfInstallments > 1) {
-      const purchaseId = Date.now().toString(); // ID único para agrupar a compra
+      const purchaseId = Date.now().toString();
       for (let i = 0; i < numberOfInstallments; i++) {
         const installmentDate = new Date(initialDate);
         installmentDate.setMonth(initialDate.getMonth() + i);
         
         const newTransaction = {
           userId,
-          accountId: parseInt(accountId),
+          accountId, // CORREÇÃO: Salvar como string
           description: `${description} (${i + 1}/${numberOfInstallments})`,
           value: parseFloat(value),
           date: Timestamp.fromDate(installmentDate),
           installmentDetails: { current: i + 1, total: parseInt(numberOfInstallments) },
           purchaseId
         };
-        const docRef = db.collection('transactions').doc(); // Cria uma referência com ID automático
+        const docRef = db.collection('transactions').doc();
         batch.set(docRef, newTransaction);
       }
     } else {
       const newTransaction = {
         userId,
-        accountId: parseInt(accountId),
+        accountId, // CORREÇÃO: Salvar como string
         description,
         value: parseFloat(value),
         date: Timestamp.fromDate(initialDate),

@@ -80,8 +80,15 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Conta não encontrada ou não autorizada.' });
     }
 
+    // Adicional: Deletar transações associadas a esta conta
+    const batch = db.batch();
+    const transactionsSnapshot = await db.collection('transactions').where('userId', '==', userId).where('accountId', '==', id).get();
+    transactionsSnapshot.forEach(doc => batch.delete(doc.ref));
+    
+    await batch.commit();
     await accountRef.delete();
-    res.status(200).json({ message: 'Conta deletada com sucesso.' });
+
+    res.status(200).json({ message: 'Conta e transações associadas deletadas com sucesso.' });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao deletar conta.', error });
   }
