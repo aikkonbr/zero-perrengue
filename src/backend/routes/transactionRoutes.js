@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
     const userId = req.user.id;
     const { accountId, month, year } = req.query;
 
+    // CASO 1: A requisição é para um mês específico (visão mensal)
     if (month && year) {
       const targetMonth = parseInt(month) - 1;
       const targetYear = parseInt(year);
@@ -66,12 +67,14 @@ router.get('/', async (req, res) => {
       let combinedTransactions = [...physicalTransactions, ...virtualTransactions];
 
       if (accountId) {
-        // CORREÇÃO: Comparar IDs como strings
         combinedTransactions = combinedTransactions.filter(t => t.accountId == accountId);
       }
+      // CORREÇÃO: Mover o res.json para fora do if do accountId
       return res.json(combinedTransactions);
 
-    } else {
+    } 
+    // CASO 2: A requisição é para TODAS as transações (para popular a navegação de anos)
+    else {
       const transactionsSnapshot = await db.collection('transactions').where('userId', '==', userId).get();
       const allTransactions = [];
       transactionsSnapshot.forEach(doc => {
@@ -82,11 +85,22 @@ router.get('/', async (req, res) => {
     }
 
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar transações.', error: error.message });
+    // Se houver um erro de índice do Firestore, ele será capturado aqui.
+    console.error("Erro ao buscar transações:", error);
+    // A mensagem de erro do Firestore geralmente contém o link para criar o índice.
+    if (error.message && error.message.includes('requires an index')) {
+        return res.status(500).json({ 
+            message: 'O banco de dados precisa de um índice para esta consulta. Verifique os logs do servidor para o link de criação.',
+            error: error.message
+        });
+    }
+    res.status(500).json({ message: 'Erro interno ao buscar transações.', error: error.message });
   }
 });
 
-// Rota para CRIAR transações
+// As outras rotas (POST, DELETE, etc.) permanecem as mesmas...
+
+// Rota para CRIAR transações (única ou parcelada)
 router.post('/', async (req, res) => {
   try {
     const userId = req.user.id;
@@ -107,7 +121,7 @@ router.post('/', async (req, res) => {
         
         const newTransaction = {
           userId,
-          accountId, // CORREÇÃO: Salvar como string
+          accountId,
           description: `${description} (${i + 1}/${numberOfInstallments})`,
           value: parseFloat(value),
           date: Timestamp.fromDate(installmentDate),
@@ -120,7 +134,7 @@ router.post('/', async (req, res) => {
     } else {
       const newTransaction = {
         userId,
-        accountId, // CORREÇÃO: Salvar como string
+        accountId,
         description,
         value: parseFloat(value),
         date: Timestamp.fromDate(initialDate),
