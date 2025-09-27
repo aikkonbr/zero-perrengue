@@ -8,26 +8,26 @@ const passport = require('passport');
 const app = express();
 const port = 3000;
 
+// Confie no proxy do Render para determinar o protocolo (http vs https)
 app.set('trust proxy', 1);
 
-// Configuração do CORS para permitir credenciais de um subdomínio diferente
+// Middleware
+// CORREÇÃO: Configuração do CORS para permitir credenciais do frontend
 app.use(cors({
-  origin: 'https://zero-perrengue-app.onrender.com', // Permite requisições do seu frontend
-  credentials: true // Permite o envio de cookies
+  origin: 'https://zero-perrengue-app.onrender.com', // URL do seu frontend
+  credentials: true
 }));
-
 app.use(express.json());
 
-// Configuração da Sessão para funcionar entre subdomínios
+// Configuração da Sessão para produção
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false, // Não cria sessão até que algo seja armazenado
   cookie: {
-    secure: true, // Garante que o cookie só seja enviado via HTTPS
+    secure: true, // O cookie só trafega em HTTPS
     httpOnly: true, // Previne acesso via JavaScript no frontend
-    sameSite: 'none', // Essencial para permitir o cookie em um contexto cross-site
-    domain: '.onrender.com' // O cookie será válido para todos os subdomínios de onrender.com
+    sameSite: 'none' // Permite que o cookie seja enviado em requisições de outro domínio
   }
 }));
 
@@ -43,6 +43,7 @@ const recurringTransactionRoutes = require('./routes/recurringTransactionRoutes'
 const summaryRoutes = require('./routes/summaryRoutes');
 const panoramaRoutes = require('./routes/panoramaRoutes');
 
+// A ordem é importante
 app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/transactions', transactionRoutes);
