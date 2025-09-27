@@ -1,68 +1,65 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
-const Transaction = require('../models/Transaction');
+const { db } = require('../firebase');
+const { Timestamp } = require('firebase-admin/firestore');
 
-const dataDir = path.join(__dirname, '..', 'data');
-
-// Middleware para garantir que o usuário está autenticado
+// Middleware de autenticação
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() && req.user) {
     return next();
   }
   res.status(401).json({ message: 'Não autorizado' });
 };
-
-// Aplica o middleware a todas as rotas deste arquivo
 router.use(isAuthenticated);
 
-// Funções de dados agora usam o ID do usuário
-const getUserTransactionsPath = (userId) => path.join(dataDir, `${userId}_transactions.json`);
-const getUserRecurringRulesPath = (userId) => path.join(dataDir, `${userId}_recurringTransactions.json`);
-
-const readData = (filePath) => {
-  if (!fs.existsSync(filePath)) return [];
+// Rota para LER transações (físicas + virtuais recorrentes)
+router.get('/', async (req, res) => {
   try {
-    const fileData = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(fileData);
-  } catch (error) {
-    return [];
-  }
-};
+    const userId = req.user.id;
+    const { accountId, month, year } = req.query;
 
-const writeTransactions = (userId, data) => {
-  const userTransactionsPath = getUserTransactionsPath(userId);
-  fs.writeFileSync(userTransactionsPath, JSON.stringify(data, null, 2), 'utf8');
-};
+    if (!month || !year) {
+      return res.status(400).json({ message: 'Mês e ano são obrigatórios.' });
+    }
 
-// Rota para buscar transações (agora específica do usuário)
-router.get('/', (req, res) => {
-  const userId = req.user.id;
-  const physicalTransactions = readData(getUserTransactionsPath(userId)).map(t => ({ ...t, date: new Date(t.date), transactionType: t.installmentDetails ? 'installment' : 'single' }));
-  const recurringRules = readData(getUserRecurringRulesPath(userId));
-  
-  const { accountId, month, year } = req.query;
-  let combinedTransactions = [...physicalTransactions];
-
-  if (month && year) {
     const targetMonth = parseInt(month) - 1;
     const targetYear = parseInt(year);
-    const targetDate = new Date(targetYear, targetMonth, 1);
+    const startDate = new Date(targetYear, targetMonth, 1);
+    const endDate = new Date(targetYear, targetMonth + 1, 1);
 
-    recurringRules.forEach(rule => {
-      const ruleStartDate = new Date(rule.startDate);
+    // Busca transações físicas no período
+    const transactionsSnapshot = await db.collection('transactions')
+      .where('userId', '==', userId)
+      .where('date', '>=', Timestamp.fromDate(startDate))
+      .where('date', '<', Timestamp.fromDate(endDate))
+      .get();
+    
+    const physicalTransactions = [];
+    transactionsSnapshot.forEach(doc => {
+      const data = doc.data();
+      physicalTransactions.push({ 
+        id: doc.id, 
+        ...data,
+        date: data.date.toDate(), // Converte Timestamp do Firestore para Date do JS
+        transactionType: data.installmentDetails ? 'installment' : 'single'
+      });
+    });
+
+    // Gera transações recorrentes virtuais para o período
+    const recurringRulesSnapshot = await db.collection('recurringRules').where('userId', '==', userId).get();
+    const virtualTransactions = [];
+    recurringRulesSnapshot.forEach(doc => {
+      const rule = doc.data();
+      const ruleStartDate = rule.startDate.toDate();
       ruleStartDate.setDate(1);
       ruleStartDate.setHours(0, 0, 0, 0);
-      
-      if (targetDate >= ruleStartDate) {
+
+      if (startDate >= ruleStartDate) {
         const recurringDate = new Date(targetYear, targetMonth, rule.dayOfMonth);
         if (recurringDate.getMonth() === targetMonth) {
-          combinedTransactions.push({
-            id: -rule.id, 
-            accountId: rule.accountId,
-            description: rule.description,
-            value: rule.value,
+          virtualTransactions.push({
+            id: `recurring_${doc.id}`,
+            ...rule,
             date: recurringDate,
             isRecurring: true,
             transactionType: 'recurring'
@@ -70,118 +67,112 @@ router.get('/', (req, res) => {
         }
       }
     });
-  }
 
-  let filteredTransactions = combinedTransactions.filter(t => {
-      const transactionDate = new Date(t.date);
-      return transactionDate.getFullYear() == year && (transactionDate.getMonth() + 1) == month;
-  });
+    let combinedTransactions = [...physicalTransactions, ...virtualTransactions];
 
-  if (accountId) {
-    filteredTransactions = filteredTransactions.filter(t => t.accountId == parseInt(accountId));
-  }
-
-  res.json(filteredTransactions);
-});
-
-// Rota para buscar uma transação específica por ID
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const transactions = readData(getUserTransactionsPath(req.user.id));
-  const transaction = transactions.find(t => t.id == parseInt(id));
-  
-  if (transaction) {
-    res.json({ ...transaction, transactionType: transaction.installmentDetails ? 'installment' : 'single' });
-  } else {
-    res.status(404).json({ message: 'Transação não encontrada.' });
-  }
-});
-
-// Rota para criar transações
-router.post('/', (req, res) => {
-  const userId = req.user.id;
-  const { accountId, description, date, transactionType, value, numberOfInstallments } = req.body;
-
-  if (!accountId || !description || !date || !value || !transactionType) {
-    return res.status(400).json({ message: 'Dados incompletos.' });
-  }
-
-  const transactions = readData(getUserTransactionsPath(userId));
-  let nextId = transactions.length > 0 ? Math.max(...transactions.map(t => t.id)) + 1 : 1;
-  const initialDate = new Date(date);
-
-  if (transactionType === 'installment') {
-    if (!numberOfInstallments || numberOfInstallments < 1) {
-      return res.status(400).json({ message: 'Número de parcelas inválido.' });
+    if (accountId) {
+      combinedTransactions = combinedTransactions.filter(t => t.accountId == parseInt(accountId));
     }
-    const purchaseId = Date.now();
-    for (let i = 0; i < numberOfInstallments; i++) {
-      const installmentDate = new Date(initialDate);
-      installmentDate.setMonth(initialDate.getMonth() + i);
-      const installmentDescription = `${description} (${i + 1}/${numberOfInstallments})`;
-      const newTransaction = new Transaction(nextId++, parseInt(accountId), installmentDescription, parseFloat(value), installmentDate, { current: i + 1, total: parseInt(numberOfInstallments) }, purchaseId);
-      transactions.push(newTransaction);
+
+    res.json(combinedTransactions);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar transações.', error: error.message });
+  }
+});
+
+// Rota para CRIAR transações (única ou parcelada)
+router.post('/', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { accountId, description, date, transactionType, value, numberOfInstallments } = req.body;
+
+    if (!accountId || !description || !date || !value || !transactionType) {
+      return res.status(400).json({ message: 'Dados incompletos.' });
     }
-  } else {
-    const newTransaction = new Transaction(nextId, parseInt(accountId), description, parseFloat(value), initialDate, null, null);
-    transactions.push(newTransaction);
+
+    const batch = db.batch();
+    const initialDate = new Date(date);
+
+    if (transactionType === 'installment' && numberOfInstallments > 1) {
+      const purchaseId = Date.now().toString(); // ID único para agrupar a compra
+      for (let i = 0; i < numberOfInstallments; i++) {
+        const installmentDate = new Date(initialDate);
+        installmentDate.setMonth(initialDate.getMonth() + i);
+        
+        const newTransaction = {
+          userId,
+          accountId: parseInt(accountId),
+          description: `${description} (${i + 1}/${numberOfInstallments})`,
+          value: parseFloat(value),
+          date: Timestamp.fromDate(installmentDate),
+          installmentDetails: { current: i + 1, total: parseInt(numberOfInstallments) },
+          purchaseId
+        };
+        const docRef = db.collection('transactions').doc(); // Cria uma referência com ID automático
+        batch.set(docRef, newTransaction);
+      }
+    } else {
+      const newTransaction = {
+        userId,
+        accountId: parseInt(accountId),
+        description,
+        value: parseFloat(value),
+        date: Timestamp.fromDate(initialDate),
+        installmentDetails: null,
+        purchaseId: null
+      };
+      const docRef = db.collection('transactions').doc();
+      batch.set(docRef, newTransaction);
+    }
+
+    await batch.commit();
+    res.status(201).json({ message: 'Transação(ões) criada(s) com sucesso.' });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao criar transação.', error: error.message });
   }
-  
-  writeTransactions(userId, transactions);
-  res.status(201).json({ message: 'Transação(ões) criada(s) com sucesso.' });
 });
 
-// Rota para ATUALIZAR uma transação
-router.put('/:id', (req, res) => {
-  const userId = req.user.id;
-  const { id } = req.params;
-  const { accountId, description, value, date } = req.body;
+// Rota para DELETAR transações
+router.delete('/:id', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const { scope } = req.query;
 
-  if (!accountId || description === undefined || value === undefined || !date) {
-    return res.status(400).json({ message: 'Dados obrigatórios faltando.' });
+    const transactionRef = db.collection('transactions').doc(id);
+    const doc = await transactionRef.get();
+
+    if (!doc.exists || doc.data().userId !== userId) {
+      return res.status(404).json({ message: 'Transação não encontrada ou não autorizada.' });
+    }
+
+    if (scope === 'future' && doc.data().purchaseId) {
+      const purchaseId = doc.data().purchaseId;
+      const deletionStartDate = doc.data().date.toDate();
+
+      const batch = db.batch();
+      const snapshot = await db.collection('transactions')
+        .where('userId', '==', userId)
+        .where('purchaseId', '==', purchaseId)
+        .where('date', '>=', Timestamp.fromDate(deletionStartDate))
+        .get();
+
+      snapshot.docs.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+
+    } else {
+      await transactionRef.delete();
+    }
+
+    res.status(200).json({ message: 'Transação(ões) deletada(s) com sucesso.' });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao deletar transação.', error: error.message });
   }
-
-  const transactions = readData(getUserTransactionsPath(userId));
-  const transactionIndex = transactions.findIndex(t => t.id == parseInt(id));
-
-  if (transactionIndex === -1) {
-    return res.status(404).json({ message: 'Transação não encontrada.' });
-  }
-
-  transactions[transactionIndex] = { ...transactions[transactionIndex], accountId: parseInt(accountId), description, value: parseFloat(value), date: new Date(date) };
-  writeTransactions(userId, transactions);
-  res.json(transactions[transactionIndex]);
 });
 
-// Rota para DELETAR transações com escopo
-router.delete('/:id', (req, res) => {
-  const userId = req.user.id;
-  const { id } = req.params;
-  const { scope } = req.query;
-
-  let transactions = readData(getUserTransactionsPath(userId));
-  const transactionToDelete = transactions.find(t => t.id == parseInt(id));
-
-  if (!transactionToDelete) {
-    return res.status(404).json({ message: 'Transação não encontrada.' });
-  }
-
-  let transactionsToKeep;
-
-  if (scope === 'future' && transactionToDelete.purchaseId) {
-    const purchaseId = transactionToDelete.purchaseId;
-    const deletionStartDate = new Date(transactionToDelete.date);
-    transactionsToKeep = transactions.filter(t => t.purchaseId !== purchaseId || new Date(t.date) < deletionStartDate);
-  } else {
-    transactionsToKeep = transactions.filter(t => t.id != parseInt(id));
-  }
-
-  if (transactionsToKeep.length === transactions.length) {
-     return res.status(404).json({ message: 'Nenhuma transação para deletar.' });
-  }
-
-  writeTransactions(userId, transactionsToKeep);
-  res.status(200).json({ message: 'Transação(ões) deletada(s) com sucesso.' });
-});
+// As rotas PUT (editar) e GET por ID único podem ser adicionadas aqui se necessário.
 
 module.exports = router;

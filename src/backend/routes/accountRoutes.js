@@ -1,90 +1,90 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
-
-const dataDir = path.join(__dirname, '..', 'data');
+const { db } = require('../firebase'); // Importa a conexão com o Firestore
 
 // Middleware para garantir que o usuário está autenticado
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() && req.user) {
     return next();
   }
   res.status(401).json({ message: 'Não autorizado' });
 };
 
-// Aplica o middleware a todas as rotas deste arquivo
 router.use(isAuthenticated);
 
-// Funções de dados agora usam o ID do usuário para encontrar o arquivo certo
-const getUserAccountsPath = (userId) => path.join(dataDir, `${userId}_accounts.json`);
-
-const readAccounts = (userId) => {
-  const userAccountsPath = getUserAccountsPath(userId);
-  if (!fs.existsSync(userAccountsPath)) {
-    return []; // Se o arquivo não existe, retorna um array vazio
-  }
+// Rota para LER todas as contas do usuário logado
+router.get('/', async (req, res) => {
   try {
-    const fileData = fs.readFileSync(userAccountsPath, 'utf8');
-    return JSON.parse(fileData);
+    const userId = req.user.id;
+    const accountsSnapshot = await db.collection('accounts').where('userId', '==', userId).get();
+    const accounts = [];
+    accountsSnapshot.forEach(doc => {
+      accounts.push({ id: doc.id, ...doc.data() });
+    });
+    res.json(accounts);
   } catch (error) {
-    return [];
+    res.status(500).json({ message: 'Erro ao buscar contas.', error });
   }
-};
-
-const writeAccounts = (userId, data) => {
-  const userAccountsPath = getUserAccountsPath(userId);
-  fs.writeFileSync(userAccountsPath, JSON.stringify(data, null, 2), 'utf8');
-};
-
-// Rotas agora usam req.user.id para operar nos dados do usuário logado
-router.get('/', (req, res) => {
-  const accounts = readAccounts(req.user.id);
-  res.json(accounts);
 });
 
-router.post('/', (req, res) => {
-  const { name, type } = req.body;
-  if (!name || !type) {
-    return res.status(400).json({ message: 'Nome e tipo são obrigatórios.' });
+// Rota para CRIAR uma nova conta
+router.post('/', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, type } = req.body;
+    if (!name || !type) {
+      return res.status(400).json({ message: 'Nome e tipo são obrigatórios.' });
+    }
+    const newAccount = { userId, name, type };
+    const docRef = await db.collection('accounts').add(newAccount);
+    res.status(201).json({ id: docRef.id, ...newAccount });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao criar conta.', error });
   }
-  const accounts = readAccounts(req.user.id);
-  const newAccount = {
-    id: accounts.length > 0 ? Math.max(...accounts.map(a => a.id)) + 1 : 1,
-    name,
-    type
-  };
-  accounts.push(newAccount);
-  writeAccounts(req.user.id, accounts);
-  res.status(201).json(newAccount);
 });
 
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const { name, type } = req.body;
-  if (!name || !type) {
-    return res.status(400).json({ message: 'Nome e tipo são obrigatórios.' });
+// Rota para ATUALIZAR uma conta
+router.put('/:id', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const { name, type } = req.body;
+    if (!name || !type) {
+      return res.status(400).json({ message: 'Nome e tipo são obrigatórios.' });
+    }
+
+    const accountRef = db.collection('accounts').doc(id);
+    const doc = await accountRef.get();
+
+    if (!doc.exists || doc.data().userId !== userId) {
+      return res.status(404).json({ message: 'Conta não encontrada ou não autorizada.' });
+    }
+
+    await accountRef.update({ name, type });
+    res.json({ id, name, type, userId });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao atualizar conta.', error });
   }
-  let accounts = readAccounts(req.user.id);
-  const accountIndex = accounts.findIndex(acc => acc.id == id);
-  if (accountIndex === -1) {
-    return res.status(404).json({ message: 'Conta não encontrada.' });
-  }
-  accounts[accountIndex] = { ...accounts[accountIndex], name, type };
-  writeAccounts(req.user.id, accounts);
-  res.json(accounts[accountIndex]);
 });
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  let accounts = readAccounts(req.user.id);
-  const initialLength = accounts.length;
-  accounts = accounts.filter(acc => acc.id != id);
-  if (accounts.length === initialLength) {
-    return res.status(404).json({ message: 'Conta não encontrada.' });
+// Rota para DELETAR uma conta
+router.delete('/:id', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const accountRef = db.collection('accounts').doc(id);
+    const doc = await accountRef.get();
+
+    if (!doc.exists || doc.data().userId !== userId) {
+      return res.status(404).json({ message: 'Conta não encontrada ou não autorizada.' });
+    }
+
+    await accountRef.delete();
+    res.status(200).json({ message: 'Conta deletada com sucesso.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao deletar conta.', error });
   }
-  writeAccounts(req.user.id, accounts);
-  res.status(200).json({ message: 'Conta deletada com sucesso.' });
 });
 
 module.exports = router;

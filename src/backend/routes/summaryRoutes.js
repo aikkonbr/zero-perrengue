@@ -1,49 +1,49 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+const { db } = require('../firebase');
+const { Timestamp } = require('firebase-admin/firestore');
 
-const dataDir = path.join(__dirname, '..', 'data');
-
-// Middleware para garantir que o usuário está autenticado
+// Middleware de autenticação
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() && req.user) {
     return next();
   }
   res.status(401).json({ message: 'Não autorizado' });
 };
-
-// Aplica o middleware a todas as rotas deste arquivo
 router.use(isAuthenticated);
 
-// Funções de dados agora usam o ID do usuário
-const getUserAccountsPath = (userId) => path.join(dataDir, `${userId}_accounts.json`);
-const getUserTransactionsPath = (userId) => path.join(dataDir, `${userId}_transactions.json`);
-const getUserRecurringRulesPath = (userId) => path.join(dataDir, `${userId}_recurringTransactions.json`);
-
-const readData = (filePath) => {
-  if (!fs.existsSync(filePath)) return [];
+// Rota para calcular o saldo de abertura (opening balance)
+router.get('/opening-balance', async (req, res) => {
   try {
-    const data = fs.readFileSync(filePath, 'utf8');
-    return data ? JSON.parse(data) : [];
-  } catch (error) {
-    return [];
-  }
-};
+    const userId = req.user.id;
+    const { month, year } = req.query;
+    if (!month || !year) {
+      return res.status(400).json({ message: 'Mês e ano são obrigatórios.' });
+    }
 
-// Rota para calcular o saldo acumulado (agora específica do usuário)
-router.get('/opening-balance', (req, res) => {
-  const userId = req.user.id;
-  const { month, year } = req.query;
-  if (!month || !year) {
-    return res.status(400).json({ message: 'Mês e ano são obrigatórios.' });
-  }
+    // Busca todos os dados do usuário em paralelo
+    const [accountsSnapshot, transactionsSnapshot, rulesSnapshot] = await Promise.all([
+      db.collection('accounts').where('userId', '==', userId).get(),
+      db.collection('transactions').where('userId', '==', userId).get(),
+      db.collection('recurringRules').where('userId', '==', userId).get()
+    ]);
 
-  try {
-    const accounts = readData(getUserAccountsPath(userId));
-    const physicalTransactions = readData(getUserTransactionsPath(userId)).map(t => ({ ...t, date: new Date(t.date) }));
-    const recurringRules = readData(getUserRecurringRulesPath(userId)).map(r => ({ ...r, startDate: new Date(r.startDate) }));
+    const accounts = [];
+    accountsSnapshot.forEach(doc => accounts.push({ id: doc.id, ...doc.data() }));
 
+    const physicalTransactions = [];
+    transactionsSnapshot.forEach(doc => {
+      const data = doc.data();
+      physicalTransactions.push({ ...data, date: data.date.toDate() });
+    });
+
+    const recurringRules = [];
+    rulesSnapshot.forEach(doc => {
+      const data = doc.data();
+      recurringRules.push({ ...data, startDate: data.startDate.toDate() });
+    });
+
+    // Lógica de cálculo do saldo de abertura
     const transactionDates = physicalTransactions.map(t => t.date.getTime());
     const ruleDates = recurringRules.map(r => r.startDate.getTime());
     const validDates = [...transactionDates, ...ruleDates].filter(t => !isNaN(t));
@@ -102,6 +102,7 @@ router.get('/opening-balance', (req, res) => {
     }
 
     res.json({ openingBalance });
+
   } catch (error) {
     console.error("Error calculating opening balance:", error);
     res.status(500).json({ message: "Erro interno ao calcular saldo anterior.", error: error.message });
